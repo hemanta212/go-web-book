@@ -3,18 +3,21 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"text/template"
 )
 
-type MyMux struct {
-}
-
-func (m *MyMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/" {
-		sayHello(w, r)
-	} else if r.URL.Path == "/test" {
-		fmt.Fprint(w, "Test passed")
+func login(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		t, _ := template.ParseFiles("login.gtpl")
+		t.Execute(w, nil)
 	} else {
-		http.NotFound(w, r)
+		r.ParseForm()
+		fmt.Println("username: ", r.Form["username"])
+		fmt.Println("password: ", r.Form["password"])
+		// Tip we can use r.FormValue("username") instead which
+		// automatically calls ParseForm
+		// downside: silences errors when key not found returning ""
+		// and if multiple value present returns only first one.
 	}
 }
 
@@ -23,6 +26,7 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	mux := &MyMux{}
-	http.ListenAndServe(":5000", mux)
+	http.HandleFunc("/", sayHello)
+	http.HandleFunc("/login", login)
+	http.ListenAndServe(":5000", nil)
 }
