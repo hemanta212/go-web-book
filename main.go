@@ -2,33 +2,27 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"strings"
 )
 
-func sayHelloName(w http.ResponseWriter, r *http.Request) {
-	// parse arguments, have to manually call this
-	r.ParseForm()
-	// form info in server side
-	fmt.Println(r.Form)
+type MyMux struct {
+}
 
-	fmt.Println("path", r.URL.Path)
-	fmt.Println("scheme", r.URL.Scheme)
-	fmt.Println(r.Form["url_long"])
-
-	for k, v := range r.Form {
-		fmt.Println("Key: ", k)
-		fmt.Println("Val: ", strings.Join(v, " "))
+func (m *MyMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		sayHello(w, r)
+	} else if r.URL.Path == "/test" {
+		fmt.Fprint(w, "Test passed")
+	} else {
+		http.NotFound(w, r)
 	}
-	fmt.Fprint(w, "Hello Pykancha!")
+}
+
+func sayHello(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello world")
 }
 
 func main() {
-	// router set
-	http.HandleFunc("/", sayHelloName)
-	err := http.ListenAndServe(":5000", nil)
-	if err != nil {
-		log.Fatal("ListenAndServe:  ", err)
-	}
+	mux := &MyMux{}
+	http.ListenAndServe(":5000", mux)
 }
