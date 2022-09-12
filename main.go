@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"text/template"
 )
 
@@ -14,10 +15,18 @@ func login(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		fmt.Println("username: ", r.Form["username"])
 		fmt.Println("password: ", r.Form["password"])
-		// Tip we can use r.FormValue("username") instead which
-		// automatically calls ParseForm
-		// downside: silences errors when key not found returning ""
-		// and if multiple value present returns only first one.
+		// Tip we can use r.Form.Get("username") instead which
+		// is better because for all fields it works and
+		// returns "" if empty.
+		// For checkboxes and radio buttons the current method errors out
+		// but it will only return first item for mutiple values tho
+		if len(r.Form["username"][0]) == 0 {
+			t, _ := template.ParseFiles("login.gtpl")
+			t.Execute(w, nil)
+		}
+		// Number validation
+		getint, err = strconv.Atoi(r.Form.Get("password"))
+
 	}
 }
 
