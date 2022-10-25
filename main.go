@@ -1,19 +1,33 @@
 package main
 
 import (
+	"crypto/md5"
 	"fmt"
 	"html/template"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 )
 
 func login(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("method:", r.Method)
 	if r.Method == "GET" {
+		currtime := time.Now().Unix()
+		h := md5.New()
+		io.WriteString(h, strconv.FormatInt(currtime, 10))
+		token := fmt.Sprintf("%x", h.Sum(nil))
 		t, _ := template.ParseFiles("login.gtpl")
-		t.Execute(w, nil)
+		t.Execute(w, token)
 	} else {
 		r.ParseForm()
-
+		token := r.Form.Get("token")
+		if token != "" {
+			// check token validity
+		} else {
+			// give error if no token
+		}
 		// to prevent scripts injcetion
 		escapedUsername := template.HTMLEscapeString(r.Form.Get("username"))
 
@@ -32,7 +46,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 			r.Method = "GET"
 			login(w, r)
 		}
-		getint, _ := strconv.Atoi(r.Form["age"][0])
+		getint, _ := strconv.Atoi(r.Form.Get("age"))
 		if getint <= 0 || getint > 100 {
 			r.Method = "GET"
 			login(w, r)
@@ -58,6 +72,35 @@ func login(w http.ResponseWriter, r *http.Request) {
 		// if slice_diff == nil { return true}
 		// return false
 
+	}
+}
+
+func upload(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("method:", r.Method)
+	if r.Method == "GET" {
+		currtime := time.Now().Unix()
+		h := md5.New()
+		io.WriteString(h, strconv.FormatInt(currtime, 10))
+		token := fmt.Sprintf("%x", h.Sum(nil))
+		t, _ := template.ParseFiles("upload.gtpl")
+		t.Execute(w, token)
+	} else {
+		r.ParseMultipartForm(32 << 20)
+		file, handler, err := r.FormFile("uploadfile")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer file.Close()
+		fmt.Fprintf(w, "%v", handler.Header)
+		f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer f.Close()
+		io.Copy(f, file)
+		w.Write([]byte("File uploaded sucessfully"))
 	}
 }
 
@@ -89,8 +132,14 @@ func validateMaleFemale(r *http.Request) bool {
 	return false
 }
 
-func main() {
+func runServer() {
 	http.HandleFunc("/", sayHello)
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/upload", upload)
 	http.ListenAndServe(":5000", nil)
+}
+
+func main() {
+	// runServer()
+	runClient()
 }
