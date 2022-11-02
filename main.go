@@ -142,5 +142,6 @@ func runServer() {
 func main() {
 	// runServer()
 	// runClient()
-	sqlLogin()
+	// sqlLogin()
+	sqliteConnect()
 }
