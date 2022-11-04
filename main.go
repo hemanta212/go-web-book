@@ -144,5 +144,6 @@ func main() {
 	// runClient()
 	// sqlLogin()
 	// sqliteConnect()
-	postgresConnect()
+	// postgresConnect()
+	ormConnect()
 }
