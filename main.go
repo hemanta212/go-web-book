@@ -145,5 +145,7 @@ func main() {
 	// sqlLogin()
 	// sqliteConnect()
 	// postgresConnect()
-	ormConnect()
+	// ormConnect()
+	// redisConnect()
+	mongoConnect()
 }
