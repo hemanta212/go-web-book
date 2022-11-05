@@ -17,7 +17,7 @@ type Userinfo struct {
 }
 
 func ormConnect() {
-	db, err := sql.Open("mysql", "pykancha:testpass@/go_web_test?charset=utf8")
+	db, err := sql.Open("mysql", "username:testpass@/go_web_test?charset=utf8")
 	checkErr(err)
 
 	orm := beedb.New(db)

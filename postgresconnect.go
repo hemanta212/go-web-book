@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	DB_USER     = "pykancha"
-	DB_PASSWORD = "sharmaji"
+	DB_USER     = "username"
+	DB_PASSWORD = "dbpass"
 	DB_NAME     = "go_postgres"
 )
 
@@ -22,13 +22,13 @@ func postgresConnect() {
 
 	fmt.Println("# inserting values")
 	var lastInsertId int
-	err = db.QueryRow("INSERT INTO userinfo(username, department, created) VALUES ($1, $2, $3) returning uid;", "pykancha", "nepali", "2022-10-11").Scan(&lastInsertId)
+	err = db.QueryRow("INSERT INTO userinfo(username, department, created) VALUES ($1, $2, $3) returning uid;", "username", "nepali", "2022-10-11").Scan(&lastInsertId)
 
 	fmt.Println("# Updating ")
 	stmt, err := db.Prepare("UPDATE userinfo set username=$1 where uid=$2")
 	checkErr(err)
 
-	res, err := stmt.Exec("hemu", lastInsertId)
+	res, err := stmt.Exec("newname", lastInsertId)
 	checkErr(err)
 
 	affect, err := res.RowsAffected()

@@ -8,14 +8,14 @@ import (
 )
 
 func sqlLogin() {
-	db, err := sql.Open("mysql", "pykancha:testpass@/go_web_test?charset=utf8")
+	db, err := sql.Open("mysql", "username:testpass@/go_web_test?charset=utf8")
 	checkErr(err)
 
 	// insert
 	stmt, err := db.Prepare("INSERT userinfo SET username=?, department=?, created=?")
 	checkErr(err)
 
-	res, err := stmt.Exec("pykancha", "nepali", "2012-12-09")
+	res, err := stmt.Exec("username", "nepali", "2012-12-09")
 	checkErr(err)
 
 	id, err := res.LastInsertId()
@@ -27,7 +27,7 @@ func sqlLogin() {
 	stmt, err = db.Prepare("UPDATE userinfo SET username=? where uid=?")
 	checkErr(err)
 
-	res, err = stmt.Exec("hemu", id)
+	res, err = stmt.Exec("newuser", id)
 	checkErr(err)
 
 	affect, err := res.RowsAffected()

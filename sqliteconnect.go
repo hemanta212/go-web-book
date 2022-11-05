@@ -15,7 +15,7 @@ func sqliteConnect() {
 	stmt, err := db.Prepare("INSERT INTO userinfo(username, department, created) values(?,?,?)")
 	checkErr(err)
 
-	res, err := stmt.Exec("pykancha", "nepali", "2022-11-02")
+	res, err := stmt.Exec("username", "nepali", "2022-11-02")
 	checkErr(err)
 
 	id, err := res.LastInsertId()
@@ -27,7 +27,7 @@ func sqliteConnect() {
 	stmt, err = db.Prepare("UPDATE userinfo set username=? where uid=?")
 	checkErr(err)
 
-	res, err = stmt.Exec("hemu", id)
+	res, err = stmt.Exec("newuser", id)
 	checkErr(err)
 
 	affected, err := res.RowsAffected()
