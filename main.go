@@ -20,36 +20,15 @@ func init() {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
+	sess := globalSessions.SessionStart(w, r)
 	fmt.Println("method:", r.Method)
 	if r.Method == "GET" {
-		currtime := time.Now().Unix()
-		h := md5.New()
-		io.WriteString(h, strconv.FormatInt(currtime, 10))
-		token := fmt.Sprintf("%x", h.Sum(nil))
 		t, _ := template.ParseFiles("login.gtpl")
-		t.Execute(w, token)
+		w.Header().Set("Content-Type", "text/html")
+		t.Execute(w, sess.Get("username"))
 	} else {
 		r.ParseForm()
-		token := r.Form.Get("token")
-		if token != "" {
-			// check token validity
-		} else {
-			// give error if no token
-		}
-		// to prevent scripts injcetion
 		escapedUsername := template.HTMLEscapeString(r.Form.Get("username"))
-
-		fmt.Println("username: ", escapedUsername)
-		fmt.Println("age: ", r.Form["age"])
-		fmt.Println("password: ", r.Form["password"])
-		fmt.Println("fruits: ", r.Form["fruit"])
-		fmt.Println("gender: ", r.Form["gender"])
-		fmt.Println("Interests: ", r.Form["interest"])
-		// Tip we can use r.FormValue("username") instead which
-		// automatically calls ParseForm
-		// downside: silences errors when key not found returning ""
-		// and if multiple value present returns only first one.
-
 		if len(escapedUsername) == 0 {
 			r.Method = "GET"
 			login(w, r)
