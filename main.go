@@ -9,39 +9,27 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/hemanta212/webapp/session"
 )
 
+var globalSessions *session.Manager
+
+func init() {
+	globalSessions, _ = session.NewManager("memory", "gosessionid", 3600)
+	go globalSessions.GC()
+}
+
 func login(w http.ResponseWriter, r *http.Request) {
+	sess := globalSessions.SessionStart(w, r)
 	fmt.Println("method:", r.Method)
 	if r.Method == "GET" {
-		currtime := time.Now().Unix()
-		h := md5.New()
-		io.WriteString(h, strconv.FormatInt(currtime, 10))
-		token := fmt.Sprintf("%x", h.Sum(nil))
 		t, _ := template.ParseFiles("login.gtpl")
-		t.Execute(w, token)
+		w.Header().Set("Content-Type", "text/html")
+		t.Execute(w, sess.Get("username"))
 	} else {
 		r.ParseForm()
-		token := r.Form.Get("token")
-		if token != "" {
-			// check token validity
-		} else {
-			// give error if no token
-		}
-		// to prevent scripts injcetion
 		escapedUsername := template.HTMLEscapeString(r.Form.Get("username"))
-
-		fmt.Println("username: ", escapedUsername)
-		fmt.Println("age: ", r.Form["age"])
-		fmt.Println("password: ", r.Form["password"])
-		fmt.Println("fruits: ", r.Form["fruit"])
-		fmt.Println("gender: ", r.Form["gender"])
-		fmt.Println("Interests: ", r.Form["interest"])
-		// Tip we can use r.FormValue("username") instead which
-		// automatically calls ParseForm
-		// downside: silences errors when key not found returning ""
-		// and if multiple value present returns only first one.
-
 		if len(escapedUsername) == 0 {
 			r.Method = "GET"
 			login(w, r)
@@ -132,6 +120,26 @@ func validateMaleFemale(r *http.Request) bool {
 	return false
 }
 
+func count(w http.ResponseWriter, r *http.Request) {
+	sess := globalSessions.SessionStart(w, r)
+	createtime := sess.Get("createtime")
+	if createtime == nil {
+		sess.Set("createtime", time.Now().Unix())
+	} else if (createtime.(int64) + 360) < (time.Now().Unix()) {
+		globalSessions.SessionDestroy(w, r)
+		sess = globalSessions.SessionStart(w, r)
+	}
+	ct := sess.Get("countnum")
+	if ct == nil {
+		sess.Set("countnum", 1)
+	} else {
+		sess.Set("countnum", (ct.(int) + 1))
+	}
+	t, _ := template.ParseFiles("count.gtpl")
+	w.Header().Set("Content-Type", "text/html")
+	t.Execute(w, sess.Get("countnum"))
+}
+
 func runServer() {
 	http.HandleFunc("/", sayHello)
 	http.HandleFunc("/login", login)
@@ -147,5 +155,5 @@ func main() {
 	// postgresConnect()
 	// ormConnect()
 	// redisConnect()
-	mongoConnect()
+	// mongoConnect()
 }
