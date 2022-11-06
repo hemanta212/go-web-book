@@ -9,7 +9,15 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/hemanta212/webapp/session"
 )
+
+var globalSessions *session.Manager
+
+func init() {
+	globalSessions, _ = session.NewManager("memory", "gosessionid", 3600)
+}
 
 func login(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("method:", r.Method)
@@ -147,5 +155,5 @@ func main() {
 	// postgresConnect()
 	// ormConnect()
 	// redisConnect()
-	mongoConnect()
+	// mongoConnect()
 }
