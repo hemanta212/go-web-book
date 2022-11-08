@@ -29,6 +29,7 @@ func NewManager(provideName, cookieName string, maxlifetime int64) (*Manager, er
 type Provider interface {
 	SessionInit(sid string) (Session, error)
 	SessionRead(sid string) (Session, error)
+	SessionUpdate(sid string) error
 	SessionDestroy(sid string) error
 	SessionGC(maxLifeTime int64)
 }

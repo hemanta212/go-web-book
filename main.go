@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	_ "github.com/hemanta212/webapp/memory"
 	"github.com/hemanta212/webapp/session"
 )
 
@@ -151,7 +152,7 @@ func main() {
 	// runServer()
 	// runClient()
 	// sqlLogin()
-	// sqliteConnect()
+	sqliteConnect()
 	// postgresConnect()
 	// ormConnect()
 	// redisConnect()
