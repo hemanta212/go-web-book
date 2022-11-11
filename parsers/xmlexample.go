@@ -21,19 +21,12 @@ type Server struct {
 }
 
 func Parse() {
-	file, err := os.Open("parsers/servers.xml") // for read access
-	if err != nil {
-		fmt.Printf("Error :%v", err)
-		return
-	}
-	defer file.Close()
-
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Printf("error: %v", err)
-		return
-	}
 	v := TopLevelServers{}
+	data, err := ReadFile("parsers/servers.xml")
+	if err != nil {
+		fmt.Printf("error : %v", err)
+		return
+	}
 	err = xml.Unmarshal(data, &v)
 	if err != nil {
 		fmt.Printf("error : %v", err)
@@ -52,4 +45,19 @@ func GenXML() {
 	}
 	os.Stdout.Write([]byte(xml.Header))
 	os.Stdout.Write(output)
+}
+
+func ReadFile(filename string) ([]byte, error) {
+	file, err := os.Open(filename) // for read access
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Printf("error: %v", err)
+		return nil, err
+	}
+	return data, nil
 }

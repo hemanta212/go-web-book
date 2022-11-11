@@ -153,7 +153,10 @@ func runServer() {
 func main() {
 	// runServer()
 	// parsers.Parse()
-	parsers.GenXML()
+	// parsers.GenXML()
+	// parsers.ParseJSONToStruct()
+	// parsers.ParseJSON()
+	parsers.GenJSON()
 	// runClient()
 	// sqlLogin()
 	// sqliteConnect()
