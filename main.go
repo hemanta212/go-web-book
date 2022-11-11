@@ -145,6 +145,7 @@ func runServer() {
 	http.HandleFunc("/", sayHello)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/upload", upload)
+	http.HandleFunc("/count", count)
 	http.ListenAndServe(":5000", nil)
 }
 
@@ -152,7 +153,7 @@ func main() {
 	// runServer()
 	// runClient()
 	// sqlLogin()
-	sqliteConnect()
+	// sqliteConnect()
 	// postgresConnect()
 	// ormConnect()
 	// redisConnect()

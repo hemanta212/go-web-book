@@ -68,7 +68,7 @@ func (pder *Provider) SessionRead(sid string) (session.Session, error) {
 	return nil, nil
 }
 
-func (pder *Provider) SessionDestory(sid string) error {
+func (pder *Provider) SessionDestroy(sid string) error {
 	if element, ok := pder.sessions[sid]; ok {
 		delete(pder.sessions, sid)
 		pder.list.Remove(element)
@@ -77,7 +77,7 @@ func (pder *Provider) SessionDestory(sid string) error {
 	return nil
 }
 
-func (pder *Provider) SessionGC(maxlifetime int64) (session.Session, error) {
+func (pder *Provider) SessionGC(maxlifetime int64) {
 	pder.lock.Lock()
 	defer pder.lock.Unlock()
 
@@ -99,7 +99,7 @@ func (pder *Provider) SessionUpdate(sid string) error {
 	pder.lock.Lock()
 	defer pder.lock.Unlock()
 
-	if element, ok := pder.sessions[side]; ok {
+	if element, ok := pder.sessions[sid]; ok {
 		element.Value.(*SessionStore).timeAccessed = time.Now()
 		pder.list.MoveToFront(element)
 		return nil
@@ -109,5 +109,5 @@ func (pder *Provider) SessionUpdate(sid string) error {
 
 func init() {
 	prov.sessions = make(map[string]*list.Element, 0)
-	session.Register("memory", prov)
+	session.Register("memory", &prov)
 }
