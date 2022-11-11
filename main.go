@@ -11,6 +11,7 @@ import (
 	"time"
 
 	_ "github.com/hemanta212/webapp/memory"
+	"github.com/hemanta212/webapp/parsers"
 	"github.com/hemanta212/webapp/session"
 )
 
@@ -151,6 +152,8 @@ func runServer() {
 
 func main() {
 	// runServer()
+	// parsers.Parse()
+	parsers.GenXML()
 	// runClient()
 	// sqlLogin()
 	// sqliteConnect()
