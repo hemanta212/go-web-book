@@ -11,7 +11,6 @@ import (
 	"time"
 
 	_ "github.com/hemanta212/webapp/memory"
-	"github.com/hemanta212/webapp/parsers"
 	"github.com/hemanta212/webapp/session"
 )
 
@@ -156,7 +155,13 @@ func main() {
 	// parsers.GenXML()
 	// parsers.ParseJSONToStruct()
 	// parsers.ParseJSON()
-	parsers.GenJSON()
+	// parsers.GenJSON()
+
+	// RegexExamples()
+	// RegexWebParser()
+	// RegexFindExample()
+	RegexpExpandExample()
+
 	// runClient()
 	// sqlLogin()
 	// sqliteConnect()
