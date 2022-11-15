@@ -12,6 +12,7 @@ import (
 
 	_ "github.com/hemanta212/webapp/memory"
 	"github.com/hemanta212/webapp/session"
+	"github.com/hemanta212/webapp/templates"
 )
 
 var globalSessions *session.Manager
@@ -160,7 +161,13 @@ func main() {
 	// RegexExamples()
 	// RegexWebParser()
 	// RegexFindExample()
-	RegexpExpandExample()
+	// RegexpExpandExample()
+
+	// templates.SimpleInsertExample()
+	// templates.NestedFieldsInsertion()
+	// templates.ConditionsExample()
+	// templates.FunctionExample()
+	templates.Subtemplates()
 
 	// runClient()
 	// sqlLogin()
