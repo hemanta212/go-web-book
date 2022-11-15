@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/hemanta212/webapp/files"
 	_ "github.com/hemanta212/webapp/memory"
 	"github.com/hemanta212/webapp/session"
-	"github.com/hemanta212/webapp/templates"
 )
 
 var globalSessions *session.Manager
@@ -167,7 +167,11 @@ func main() {
 	// templates.NestedFieldsInsertion()
 	// templates.ConditionsExample()
 	// templates.FunctionExample()
-	templates.Subtemplates()
+	// templates.Subtemplates()
+
+	// files.MakeRmDir()
+	// files.CreateAndWriteFile()
+	files.ReadAndDelFile()
 
 	// runClient()
 	// sqlLogin()
